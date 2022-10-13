@@ -1,0 +1,11 @@
+--- cargo-crates/jni-0.19.0/src/wrapper/jnienv.rs.orig	2022-10-13 08:25:32.025239000 +0000
++++ cargo-crates/jni-0.19.0/src/wrapper/jnienv.rs	2022-10-13 08:25:47.923026000 +0000
+@@ -292,7 +292,7 @@
+             unreachable!()
+         });
+ 
+-        panic!(res.unwrap_err());
++        panic!("{}", res.unwrap_err());
+     }
+ 
+     /// Check to see if an exception is being thrown. This only differs from

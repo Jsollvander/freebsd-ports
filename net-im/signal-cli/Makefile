@@ -1,11 +1,9 @@
 PORTNAME=	signal-cli
 DISTVERSIONPREFIX=	v
-DISTVERSION=	0.9.0
-PORTREVISION=	1
-PORTEPOCH=	1
+DISTVERSION=	0.11.3
 CATEGORIES=	net-im java
 MASTER_SITES=	https://github.com/${GH_ACCOUNT}/${PORTNAME}/releases/download/${DISTVERSIONFULL}/:jars
-DISTFILES=	${PORTNAME}-${DISTVERSION}${EXTRACT_SUFX}:jars
+DISTFILES=	${PORTNAME}-${DISTVERSION}-Linux${EXTRACT_SUFX}:jars
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Command-line and D-Bus interface for Signal and libsignal-service-java
@@ -16,16 +14,15 @@ LICENSE_FILE=	${WRKSRC}/LICENSE
 
 EXTRACT_DEPENDS=	zip:archivers/zip
 BUILD_DEPENDS=		asciidoc>0:textproc/asciidoc
-LIB_DEPENDS=		libsignal_jni.so:net-im/libsignal-client \
-			libzkgroup.so:net-im/zkgroup
-RUN_DEPENDS=		libsignal-client>=0.9.0:net-im/libsignal-client
+LIB_DEPENDS=		libsignal_jni.so:net-im/libsignal-client
+RUN_DEPENDS=		libsignal-client>=0.20.0:net-im/libsignal-client
 TEST_DEPENDS=		qrencode:graphics/libqrencode
 
 USES=		gmake shebangfix
 USE_GITHUB=	yes
 GH_ACCOUNT=	AsamK
 USE_JAVA=	yes
-JAVA_VERSION=	11+
+JAVA_VERSION=	17+
 JAVA_RUN=	jre
 USE_RC_SUBR=	signal_cli
 SHEBANG_FILES=	bin/${PORTNAME}
@@ -52,12 +49,6 @@ OPTIONS_DEFAULT=	DBUS
 DBUS_RUN_DEPENDS=	dbus>0:devel/dbus
 DBUS_PLIST_FILES=	etc/dbus-1/system.d/org.asamk.Signal.conf \
 			share/dbus-1/services/org.asamk.Signal.service
-
-post-extract:
-# Delete bundled libraries from the JARs. Otherwise, they are going to conflict
-# with the libraries installed by net-im/zkgroup and net-im/libsignal-client.
-	zip -d ${WRKSRC}/lib/zkgroup-java-*.jar libzkgroup.so
-	zip -d ${WRKSRC}/lib/signal-client-java-*.jar libsignal_jni.so
 
 do-install:
 	@${MKDIR} ${STAGEDIR}${DATADIR}/bin
